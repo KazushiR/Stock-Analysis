@@ -1,1 +1,1 @@
-# Stock-Analysis
+These two scripts are used to get stock information from certain subreddits. From there, it will get the total mentions, the positive score and the negative score from both Reddit and Twitter and upload this information to a database.
