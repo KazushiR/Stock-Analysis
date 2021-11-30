@@ -5,7 +5,7 @@ import yfinance as yf
 from collections import Counter
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
-load_dotenv(find_dotenv(r"C:\Users\kazna\OneDrive\Desktop\PythonProjects\environmental_passwords for sites\.env.txt"))
+load_dotenv(find_dotenv(".env.txt"))
 
 Reddit = praw.Reddit(
     client_id=os.getenv("reddit_key"),
@@ -45,8 +45,7 @@ def get_wsb_tickers(top_ticker_symbols):
 def stock_sentimental_analysis(top_ticker_symbols):
         pattern = r'[A-Z]+\b'
         sorted_list = sorted(top_ticker_symbols, key = top_ticker_symbols.get, reverse = True)[:10]
-        for submissions in wsb_subreddit.hot(limit = 1):
-            submissions.comment_limit = 3
+        for submissions in wsb_subreddit.hot(limit = 5):
             for top_level_comment in submissions.comments:
                 temp_dict = {}
                 if isinstance (top_level_comment, MoreComments):
