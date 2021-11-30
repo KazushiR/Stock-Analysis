@@ -4,7 +4,7 @@ from RedditStockTickers import top_ticker_symbols, get_wsb_tickers, stock_sentim
 from dotenv import find_dotenv, load_dotenv
 from collections import Counter
 
-load_dotenv(find_dotenv(r"C:\Users\Kazushi Rickert\Desktop\PythonProjects\environmental_passwords for sites\.env.txt"))
+load_dotenv(find_dotenv(".env.txt"))
 
 sid_obj = SentimentIntensityAnalyzer() #NLTK Vader Analysis
 
@@ -12,7 +12,15 @@ def add_stocks_to_db(reddit_total_mentions, stock_sentimental_positive, stock_se
     print((reddit_total_mentions, stock_sentimental_positive, stock_sentimental_negative, total_mentions, positive, negative ))
     conn = sqlite3.connect("Twitter_Reddit.db")
     ticker_table = conn.cursor()
-    ticker_table.execute("CREATE TABLE IF NOT EXISTS STOCK_TICKERS (Stock_Ticker TEXT, Reddit_Total_Mentions INTEGER, Reddit_Positive_Mentions Integer, Reddit_Negative_Mentions INTEGER, Twitter_Total_Mentions Integer, Twitter_Positive_Mentions  INTEGER, Twitter_Negative_Mentions INTEGER);")
+    ticker_table.execute("CREATE TABLE IF NOT EXISTS STOCK_TICKERS 
+                         (Stock_Ticker TEXT,
+                          Reddit_Total_Mentions 
+                          INTEGER, 
+                          Reddit_Positive_Mentions Integer, 
+                          Reddit_Negative_Mentions INTEGER, 
+                          Twitter_Total_Mentions Integer, 
+                          Twitter_Positive_Mentions  INTEGER, 
+                          Twitter_Negative_Mentions INTEGER);")
     sorted_list = sorted(reddit_total_mentions, key = reddit_total_mentions.get, reverse = True)[:10]
     for stock_ticker in sorted_list:
         temp_tuple = (reddit_total_mentions, stock_sentimental_positive, stock_sentimental_negative, total_mentions, positive, negative)
@@ -77,7 +85,7 @@ def twitter_sentimental_analysis(top_ticker_symbols ):
     api = tweepy.API(auth)
     sorted_list = sorted(dict(Counter(top_ticker_symbols)), key = dict(Counter(top_ticker_symbols)).get, reverse = True)[:10]
     for stock_tickers in sorted_list:
-        for tweet in tweepy.Cursor(api.search_tweets, q = f"${stock_tickers}  -filter:retweets", lang = "en").items(10):
+        for tweet in tweepy.Cursor(api.search_tweets, q = f"${stock_tickers}  -filter:retweets", lang = "en").items(100):
             no_emoji_tweet = tweet.text.encode("ascii", "ignore").decode("utf8") #ignore emoji's
             sentiment_dict = sid_obj.polarity_scores(no_emoji_tweet)
             if stock_tickers in no_emoji_tweet:
