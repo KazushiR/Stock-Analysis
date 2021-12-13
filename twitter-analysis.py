@@ -6,7 +6,7 @@ from collections import Counter
 from datetime import datetime
 import yfinance as yf
 
-load_dotenv(find_dotenv(r"C:\Users\Kazushi Rickert\Desktop\PythonProjects\environmental_passwords for sites\.env.txt"))
+load_dotenv(find_dotenv(r".env.txt"))
 
 sid_obj = SentimentIntensityAnalyzer() #NLTK Vader Analysis
 
